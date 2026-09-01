@@ -5,36 +5,30 @@ import React, { FC } from 'react';
 /**
  * FDG Workspace wordmark.
  *
- * Deliberately typographic rather than an invented logo - swap the mark below
- * for FDG's real asset when you have it, and every screen that uses this
- * component updates at once.
+ * Typographic rather than a mark: "FDG" set tight in the display face, with
+ * WORKSPACE letterspaced beneath it in mono - the same mono the product uses
+ * for times, so the wordmark and the schedule share a voice. Replace this with
+ * FDG's real asset when it exists and every screen updates at once.
  */
 export const WorkspaceBrand: FC<{ size?: 'sm' | 'lg' }> = ({ size = 'sm' }) => {
   const large = size === 'lg';
 
   return (
-    <div className="flex items-center gap-[10px] select-none">
-      <div
-        className={`${
-          large ? 'w-[44px] h-[44px] text-[18px]' : 'w-[32px] h-[32px] text-[13px]'
-        } rounded-[10px] bg-[#612BD3] text-white font-[600] flex items-center justify-center shrink-0`}
+    <div className="flex flex-col select-none leading-none">
+      <span
+        className={`${large ? 'text-[30px]' : 'text-[19px]'} font-[700] tracking-[-0.04em]`}
+        style={{ fontFamily: 'var(--font-display, inherit)' }}
       >
         FDG
-      </div>
-      <div className="flex flex-col leading-tight min-w-0">
-        <span
-          className={`${
-            large ? 'text-[22px]' : 'text-[16px]'
-          } font-[600] truncate`}
-        >
-          FDG Workspace
-        </span>
-        {large && (
-          <span className="text-[13px] text-white/50 truncate">
-            Projects, clients and social in one place
-          </span>
-        )}
-      </div>
+      </span>
+      <span
+        className={`${
+          large ? 'text-[11px] mt-[6px]' : 'text-[9px] mt-[4px]'
+        } tracking-[0.34em] text-[#B69DEC] uppercase`}
+        style={{ fontFamily: 'var(--font-mono, inherit)' }}
+      >
+        Workspace
+      </span>
     </div>
   );
 };
