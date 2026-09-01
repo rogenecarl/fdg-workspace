@@ -77,6 +77,27 @@ export const useMenuItem = () => {
       path: '/workspace/clients',
     },
     {
+      name: t('projects', 'Projects'),
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="23"
+          height="23"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M3 5a2 2 0 0 1 2-2h4l2 3h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5Z"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      ),
+      path: '/workspace/projects',
+    },
+    {
       name: 'Agent',
       icon: (
         <svg
