@@ -50,6 +50,10 @@ import { AdminStatsService } from '@gitroom/nestjs-libraries/database/prisma/adm
 // FDG Workspace
 import { ClientsRepository } from '@gitroom/nestjs-libraries/database/prisma/workspace/clients.repository';
 import { ClientsService } from '@gitroom/nestjs-libraries/database/prisma/workspace/clients.service';
+import { ProjectsRepository } from '@gitroom/nestjs-libraries/database/prisma/workspace/projects.repository';
+import { ProjectsService } from '@gitroom/nestjs-libraries/database/prisma/workspace/projects.service';
+import { TasksRepository } from '@gitroom/nestjs-libraries/database/prisma/workspace/tasks.repository';
+import { TasksService } from '@gitroom/nestjs-libraries/database/prisma/workspace/tasks.service';
 
 @Global()
 @Module({
@@ -109,6 +113,10 @@ import { ClientsService } from '@gitroom/nestjs-libraries/database/prisma/worksp
     // FDG Workspace
     ClientsRepository,
     ClientsService,
+    ProjectsRepository,
+    ProjectsService,
+    TasksRepository,
+    TasksService,
   ],
   get exports() {
     return this.providers;
