@@ -4,12 +4,12 @@ import React, { FC, useCallback } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { object, string } from 'yup';
-import { Button } from '@gitroom/react/form/button';
 import { Input } from '@gitroom/react/form/input';
 import { Textarea } from '@gitroom/react/form/textarea';
 import { useFetch } from '@gitroom/helpers/utils/custom.fetch';
 import { useModals } from '@gitroom/frontend/components/layout/new-modal';
 import { useToaster } from '@gitroom/react/toaster/toaster';
+import { useT } from '@gitroom/react/translation/get.transation.service.client';
 
 const schema = object({
   name: string().required('Name is required').max(120),
@@ -27,6 +27,7 @@ export const ClientModalComponent: FC<{
   const fetch = useFetch();
   const modal = useModals();
   const toaster = useToaster();
+  const t = useT();
 
   const form = useForm({
     resolver: yupResolver(schema),
@@ -41,8 +42,8 @@ export const ClientModalComponent: FC<{
 
   const submit = useCallback(
     async (values: any) => {
-      // The DTO validates contactEmail as an email and website as a URL, so
-      // empty strings would fail validation. Drop them instead of sending "".
+      // The DTO validates contactEmail as an email and website as a URL, so an
+      // empty string would fail validation. Drop empties instead of sending "".
       const body = Object.fromEntries(
         Object.entries(values).filter(([, value]) => value !== '')
       );
@@ -56,15 +57,23 @@ export const ClientModalComponent: FC<{
       );
 
       if (!response.ok) {
-        toaster.show('Could not save the client', 'warning');
+        toaster.show(
+          t('client_save_failed', 'Could not save the client'),
+          'warning'
+        );
         return;
       }
 
-      toaster.show(data ? 'Client updated' : 'Client created', 'success');
+      toaster.show(
+        data
+          ? t('client_updated', 'Client updated')
+          : t('client_created', 'Client created'),
+        'success'
+      );
       reload();
       modal.closeAll();
     },
-    [data, reload]
+    [data, reload, t]
   );
 
   return (
@@ -73,18 +82,42 @@ export const ClientModalComponent: FC<{
         onSubmit={form.handleSubmit(submit)}
         className="flex flex-col gap-[16px] w-full"
       >
-        <Input label="Name" name="name" placeholder="Acme Ltd" />
-        <Input label="Contact name" name="contactName" placeholder="Jane Doe" />
+        <Input label={t('name', 'Name')} name="name" placeholder="Acme Ltd" />
         <Input
-          label="Contact email"
+          label={t('contact_name', 'Contact name')}
+          name="contactName"
+          placeholder="Jane Doe"
+        />
+        <Input
+          label={t('contact_email', 'Contact email')}
           name="contactEmail"
           placeholder="jane@acme.com"
         />
-        <Input label="Website" name="website" placeholder="https://acme.com" />
-        <Textarea label="Notes" name="notes" />
-        <Button type="submit" disabled={form.formState.isSubmitting}>
-          {data ? 'Save changes' : 'Create client'}
-        </Button>
+        <Input
+          label={t('website', 'Website')}
+          name="website"
+          placeholder="https://acme.com"
+        />
+        <Textarea label={t('notes', 'Notes')} name="notes" />
+
+        <div className="flex flex-col sm:flex-row gap-[8px] sm:justify-end">
+          <button
+            type="button"
+            onClick={() => modal.closeAll()}
+            className="cursor-pointer px-[20px] h-[44px] bg-btnSimple hover:bg-boxHover transition-colors rounded-[8px] text-[15px] font-[600]"
+          >
+            {t('cancel', 'Cancel')}
+          </button>
+          <button
+            type="submit"
+            disabled={form.formState.isSubmitting}
+            className="cursor-pointer px-[20px] h-[44px] bg-[#612BD3] hover:bg-[#5520CB] disabled:opacity-50 transition-colors text-white rounded-[8px] text-[15px] font-[600]"
+          >
+            {data
+              ? t('save_changes', 'Save changes')
+              : t('create_client', 'Create client')}
+          </button>
+        </div>
       </form>
     </FormProvider>
   );
