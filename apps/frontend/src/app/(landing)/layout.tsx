@@ -44,8 +44,14 @@ export default async function LandingLayout({
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
+      {/* `dark` is required, not cosmetic: colors.scss defines every --new-*
+          variable under `:root .dark`, and global.scss sets
+          `background: var(--new-bgColor) !important` on body. Without the
+          class that variable is undefined and the page renders on browser
+          white. The `!` prefix on the background is how (app)/layout.tsx beats
+          the same !important rule. */}
       <body
-        className={`${archivo.variable} ${jakarta.variable} ${plexMono.variable} bg-[#0B0B0F] text-[#EDEBE6] antialiased`}
+        className={`${archivo.variable} ${jakarta.variable} ${plexMono.variable} dark !bg-[#0B0B0F] text-[#EDEBE6] antialiased`}
         style={{ fontFamily: 'var(--font-body)' }}
       >
         {children}
