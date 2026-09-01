@@ -22,11 +22,13 @@ const COLUMNS = [
   { status: 'DONE', key: 'done', label: 'Done' },
 ] as const;
 
-const PRIORITY_STYLES: Record<string, string> = {
-  HIGH: 'bg-[#d82d7e] text-white',
-  MEDIUM: 'bg-btnSimple',
-  LOW: 'bg-btnSimple',
-};
+import {
+  BADGE_BASE,
+  TASK_PRIORITY_STYLES,
+  TASK_STATUS_STYLES,
+  badgeStyle,
+  dueDateStyle,
+} from '@gitroom/frontend/components/workspace/workspace.colors';
 
 const TaskCard: FC<{
   task: any;
@@ -75,15 +77,17 @@ const TaskCard: FC<{
 
       <div className="flex items-center flex-wrap gap-[6px] mt-[10px]">
         <span
-          className={`text-[11px] font-[600] px-[8px] py-[2px] rounded-[4px] ${
-            PRIORITY_STYLES[task.priority] || 'bg-btnSimple'
+          className={`${BADGE_BASE} ${
+            badgeStyle(TASK_PRIORITY_STYLES, task.priority).badge
           }`}
         >
           {t(task.priority.toLowerCase(), task.priority)}
         </span>
 
         {task.dueDate && (
-          <span className="text-[11px] text-textItemBlur">
+          <span
+            className={`text-[11px] ${dueDateStyle(task.dueDate, task.status)}`}
+          >
             {new Date(task.dueDate).toLocaleDateString()}
           </span>
         )}
@@ -136,9 +140,22 @@ const Column: FC<{
   return (
     <div className="flex flex-col min-w-[260px] flex-1 bg-newBgColor rounded-[12px] border border-newBorder overflow-hidden">
       <div className="px-[16px] py-[12px] border-b border-newBorder flex items-center justify-between gap-[8px]">
-        <div className="text-[13px] font-[600] truncate">
-          {label}
-          <span className="text-textItemBlur ms-[6px]">{tasks.length}</span>
+        <div className="text-[13px] font-[600] truncate flex items-center gap-[8px] min-w-0">
+          {/* The dot is what makes a column identifiable at a glance while
+              dragging, when the header text is out of focus. */}
+          <span
+            className={`w-[8px] h-[8px] rounded-full shrink-0 ${
+              badgeStyle(TASK_STATUS_STYLES, status).dot
+            }`}
+          />
+          <span className="truncate">{label}</span>
+          <span
+            className={`${BADGE_BASE} ${
+              badgeStyle(TASK_STATUS_STYLES, status).badge
+            } shrink-0`}
+          >
+            {tasks.length}
+          </span>
         </div>
         <button
           type="button"

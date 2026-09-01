@@ -9,6 +9,12 @@ import { deleteDialog } from '@gitroom/react/helpers/delete.dialog';
 import { useT } from '@gitroom/react/translation/get.transation.service.client';
 import { useProjects } from '@gitroom/frontend/components/workspace/projects.hooks';
 import { ProjectModalComponent } from '@gitroom/frontend/components/workspace/project.modal.component';
+import {
+  BADGE_BASE,
+  PROJECT_STATUS_STYLES,
+  badgeStyle,
+  dueDateStyle,
+} from '@gitroom/frontend/components/workspace/workspace.colors';
 
 const STATUS_LABELS: Record<string, string> = {
   PLANNING: 'Planning',
@@ -101,21 +107,39 @@ export const ProjectsListComponent: FC = () => {
                 href={`/workspace/projects/${project.id}`}
                 className="flex flex-col min-w-0 flex-1"
               >
-                <div className="text-[15px] font-[600] truncate">
-                  {project.name}
+                <div className="flex items-center gap-[8px] min-w-0">
+                  <span className="text-[15px] font-[600] truncate">
+                    {project.name}
+                  </span>
+                  <span
+                    className={`${BADGE_BASE} ${
+                      badgeStyle(PROJECT_STATUS_STYLES, project.status).badge
+                    } shrink-0`}
+                  >
+                    {t(
+                      project.status.toLowerCase(),
+                      STATUS_LABELS[project.status] || project.status
+                    )}
+                  </span>
                 </div>
-                <div className="text-[13px] text-textItemBlur mt-[2px] truncate">
-                  {project.client?.name}
-                  {' · '}
-                  {t(
-                    project.status.toLowerCase(),
-                    STATUS_LABELS[project.status] || project.status
+                <div className="text-[13px] mt-[2px] truncate">
+                  <span className="text-textItemBlur">
+                    {project.client?.name}
+                  </span>
+                  {project.dueDate && (
+                    <>
+                      <span className="text-textItemBlur">{' · '}</span>
+                      <span
+                        className={dueDateStyle(
+                          project.dueDate,
+                          project.status === 'COMPLETED' ? 'DONE' : undefined
+                        )}
+                      >
+                        {t('due', 'Due')}{' '}
+                        {new Date(project.dueDate).toLocaleDateString()}
+                      </span>
+                    </>
                   )}
-                  {project.dueDate
-                    ? ` · ${t('due', 'Due')} ${new Date(
-                        project.dueDate
-                      ).toLocaleDateString()}`
-                    : ''}
                 </div>
               </Link>
               <div className="flex flex-wrap gap-[6px] shrink-0">
