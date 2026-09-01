@@ -88,7 +88,14 @@ export async function proxy(request: NextRequest) {
 
   const org = nextUrl.searchParams.get('org');
   const url = new URL(nextUrl).search;
-  if (!nextUrl.pathname.startsWith('/auth') && !authCookie) {
+  // FDG Workspace: `/` is a public landing page, so logged-out visitors are
+  // served it rather than bounced to /auth. Logged-in users still fall through
+  // to the redirect further down that sends `/` to the app.
+  if (
+    nextUrl.pathname !== '/' &&
+    !nextUrl.pathname.startsWith('/auth') &&
+    !authCookie
+  ) {
     const providers = ['google', 'settings'];
     const findIndex = providers.find((p) => nextUrl.href.indexOf(p) > -1);
     const additional = !findIndex
@@ -157,7 +164,10 @@ export async function proxy(request: NextRequest) {
       }
       return redirect;
     }
-    if (nextUrl.pathname === '/') {
+    // FDG Workspace: only send `/` into the app for a signed-in user. Without
+    // the authCookie guard this fires for logged-out visitors too and the
+    // public landing page can never render.
+    if (nextUrl.pathname === '/' && authCookie) {
       return NextResponse.redirect(
         new URL(
           !!process.env.IS_GENERAL ? '/launches' : `/analytics`,
