@@ -58,99 +58,92 @@ export const ProjectsListComponent: FC = () => {
     [mutate, t]
   );
 
+  // The (site) layout gives children no padding and already renders the page
+  // title in its header, so the page owns its surface and never its own <h1>.
   return (
-    <div className="flex flex-col gap-[20px] w-full">
-      <div className="bg-newBgColorInner rounded-[12px] border border-newBorder overflow-hidden">
-        <div className="px-[20px] py-[14px] border-b border-newBorder flex flex-col sm:flex-row sm:items-center justify-between gap-[12px]">
-          <div className="min-w-0">
-            <div className="text-[15px] font-[600]">
-              {t('projects', 'Projects')}
-            </div>
-            <div className="text-[13px] text-textItemBlur mt-[2px]">
-              {t('projects_description', 'Work in progress for your clients.')}
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={openProject()}
-            className="cursor-pointer px-[16px] h-[36px] bg-[#612BD3] hover:bg-[#5520CB] text-white transition-colors rounded-[8px] text-[13px] font-[600] flex items-center justify-center gap-[6px] shrink-0"
-          >
-            {t('add_project', 'Add project')}
-          </button>
+    <div className="bg-newBgColorInner p-[20px] flex flex-1 flex-col gap-[15px] transition-all">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-[12px]">
+        <div className="text-[13px] text-textItemBlur min-w-0">
+          {t('projects_description', 'Work in progress for your clients.')}
         </div>
-
-        <div className="p-[20px]">
-          {isLoading && (
-            <div className="text-[14px] text-textItemBlur">
-              {t('loading', 'Loading…')}
-            </div>
-          )}
-
-          {!isLoading && !data?.length && (
-            <div className="text-center py-[32px] text-[14px] text-textItemBlur">
-              {t(
-                'no_projects_yet',
-                'No projects yet. Add a client first, then create a project for them.'
-              )}
-            </div>
-          )}
-
-          {!!data?.length && (
-            <div className="flex flex-col gap-[8px]">
-              {data.map((project: any) => (
-                <div
-                  key={project.id}
-                  className="border border-newBorder rounded-[8px] p-[16px] flex flex-col sm:flex-row sm:items-center justify-between gap-[12px] hover:bg-boxHover transition-colors"
-                >
-                  <Link
-                    href={`/workspace/projects/${project.id}`}
-                    className="flex flex-col min-w-0 flex-1"
-                  >
-                    <div className="text-[15px] font-[600] truncate">
-                      {project.name}
-                    </div>
-                    <div className="text-[13px] text-textItemBlur mt-[2px] truncate">
-                      {project.client?.name}
-                      {' · '}
-                      {t(
-                        project.status.toLowerCase(),
-                        STATUS_LABELS[project.status] || project.status
-                      )}
-                      {project.dueDate
-                        ? ` · ${t('due', 'Due')} ${new Date(
-                            project.dueDate
-                          ).toLocaleDateString()}`
-                        : ''}
-                    </div>
-                  </Link>
-                  <div className="flex gap-[6px] shrink-0">
-                    <Link
-                      href={`/workspace/projects/${project.id}`}
-                      className="cursor-pointer px-[16px] h-[36px] bg-btnSimple hover:bg-boxHover transition-colors rounded-[8px] text-[13px] font-[600] flex items-center"
-                    >
-                      {t('open_board', 'Open board')}
-                    </Link>
-                    <button
-                      type="button"
-                      onClick={openProject(project)}
-                      className="cursor-pointer px-[16px] h-[36px] bg-btnSimple hover:bg-boxHover transition-colors rounded-[8px] text-[13px] font-[600]"
-                    >
-                      {t('edit', 'Edit')}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={removeProject(project)}
-                      className="cursor-pointer px-[16px] h-[36px] bg-btnSimple hover:bg-boxHover transition-colors rounded-[8px] text-[13px] font-[600]"
-                    >
-                      {t('delete', 'Delete')}
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        <button
+          type="button"
+          onClick={openProject()}
+          className="cursor-pointer px-[16px] h-[36px] bg-[#612BD3] hover:bg-[#5520CB] text-white transition-colors rounded-[8px] text-[13px] font-[600] flex items-center justify-center shrink-0"
+        >
+          {t('add_project', 'Add project')}
+        </button>
       </div>
+
+      {isLoading && (
+        <div className="text-[14px] text-textItemBlur">
+          {t('loading', 'Loading…')}
+        </div>
+      )}
+
+      {!isLoading && !data?.length && (
+        <div className="text-center py-[40px] text-[14px] text-textItemBlur">
+          {t(
+            'no_projects_yet',
+            'No projects yet. Add a client first, then create a project for them.'
+          )}
+        </div>
+      )}
+
+      {!!data?.length && (
+        <div className="flex flex-col gap-[8px]">
+          {data.map((project: any) => (
+            <div
+              key={project.id}
+              className="border border-newBorder rounded-[8px] p-[16px] flex flex-col sm:flex-row sm:items-center justify-between gap-[12px] hover:bg-boxHover transition-colors"
+            >
+              <Link
+                href={`/workspace/projects/${project.id}`}
+                className="flex flex-col min-w-0 flex-1"
+              >
+                <div className="text-[15px] font-[600] truncate">
+                  {project.name}
+                </div>
+                <div className="text-[13px] text-textItemBlur mt-[2px] truncate">
+                  {project.client?.name}
+                  {' · '}
+                  {t(
+                    project.status.toLowerCase(),
+                    STATUS_LABELS[project.status] || project.status
+                  )}
+                  {project.dueDate
+                    ? ` · ${t('due', 'Due')} ${new Date(
+                        project.dueDate
+                      ).toLocaleDateString()}`
+                    : ''}
+                </div>
+              </Link>
+              <div className="flex flex-wrap gap-[6px] shrink-0">
+                <Link
+                  href={`/workspace/projects/${project.id}`}
+                  className="cursor-pointer px-[16px] h-[36px] bg-btnSimple hover:bg-boxHover transition-colors rounded-[8px] text-[13px] font-[600] flex items-center"
+                >
+                  {t('open_board', 'Open board')}
+                </Link>
+                <button
+                  type="button"
+                  onClick={openProject(project)}
+                  className="cursor-pointer px-[16px] h-[36px] bg-btnSimple hover:bg-boxHover transition-colors rounded-[8px] text-[13px] font-[600]"
+                >
+                  {t('edit', 'Edit')}
+                </button>
+                <button
+                  type="button"
+                  onClick={removeProject(project)}
+                  className="cursor-pointer px-[16px] h-[36px] bg-btnSimple hover:bg-boxHover transition-colors rounded-[8px] text-[13px] font-[600]"
+                >
+                  {t('delete', 'Delete')}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

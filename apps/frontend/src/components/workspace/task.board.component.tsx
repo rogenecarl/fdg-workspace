@@ -238,25 +238,29 @@ export const TaskBoardComponent: FC<{ projectId: string }> = ({
     [mutate]
   );
 
+  // The (site) layout gives children no padding, so the page owns its surface.
+  // The layout header shows "Projects"; the project's own name belongs here.
+  // `min-w-0` on the surface is what lets the column strip scroll instead of
+  // stretching the whole page sideways.
   return (
-    <div className="flex flex-col gap-[20px] w-full">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-[12px]">
+    <div className="bg-newBgColorInner p-[20px] flex flex-1 flex-col gap-[15px] min-w-0 transition-all">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-[12px]">
         <div className="min-w-0">
           <Link
             href="/workspace/projects"
-            className="text-[13px] text-textItemBlur hover:text-textColor transition-colors"
+            className="text-[13px] text-textItemBlur hover:text-newTextColor transition-colors"
           >
             ← {t('back_to_projects', 'Back to projects')}
           </Link>
-          <div className="text-[20px] font-[600] mt-[4px] truncate">
+          <div className="text-[15px] font-[600] mt-[4px] truncate">
             {project?.name || t('loading', 'Loading…')}
           </div>
-          {project?.client?.name && (
-            <div className="text-[13px] text-textItemBlur truncate">
-              {project.client.name}
-            </div>
-          )}
         </div>
+        {project?.client?.name && (
+          <div className="text-[13px] text-textItemBlur truncate shrink-0">
+            {project.client.name}
+          </div>
+        )}
       </div>
 
       {isLoading ? (
@@ -265,9 +269,11 @@ export const TaskBoardComponent: FC<{ projectId: string }> = ({
         </div>
       ) : (
         <DndProvider backend={HTML5Backend}>
-          {/* Columns scroll horizontally on narrow screens rather than
-              squashing; the page itself never scrolls sideways. */}
-          <div className="flex gap-[12px] overflow-x-auto pb-[8px]">
+          {/* The strip scrolls horizontally on narrow screens rather than
+              squashing the columns; the page itself never scrolls sideways.
+              Columns stretch to equal height so the board reads as a grid
+              rather than a ragged row. */}
+          <div className="flex gap-[12px] overflow-x-auto pb-[8px] flex-1">
             {COLUMNS.map((column) => (
               <Column
                 key={column.status}
