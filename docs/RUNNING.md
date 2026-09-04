@@ -167,7 +167,26 @@ FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memor
 monorepo. Node's default heap ceiling is about 2GB per process, and WSL2 gets
 half the host's RAM by default.
 
+The dev scripts already pass `--max-old-space-size=3072`, so this should not
+happen. It looks like this:
+
+```
+apps/orchestrator dev: Aborted (core dumped)
+ELIFECYCLE  Command failed with exit code 134.
+```
+
+Exit code 134 is SIGABRT, which is what a heap exhaustion looks like from the
+outside. Note that `pnpm run dev` runs four apps together, so one of them dying
+takes the other three with it - a backend that "stopped working" is often really
+the orchestrator running out of memory.
+
+Free system memory is *not* the same thing as heap headroom: Node caps its own
+heap per process regardless of how much RAM the machine has.
+
 **Fixes, in order of preference:**
+
+0. Confirm the flag is still on the dev scripts in `package.json`. If someone
+   removed it, that is the cause.
 
 1. Give WSL more memory. Create `C:\Users\<you>\.wslconfig`:
 
