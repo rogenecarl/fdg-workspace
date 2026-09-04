@@ -47,6 +47,13 @@ import { ErrorsRepository } from '@gitroom/nestjs-libraries/database/prisma/erro
 import { ErrorsService } from '@gitroom/nestjs-libraries/database/prisma/errors/errors.service';
 import { AdminStatsRepository } from '@gitroom/nestjs-libraries/database/prisma/admin-stats/admin-stats.repository';
 import { AdminStatsService } from '@gitroom/nestjs-libraries/database/prisma/admin-stats/admin-stats.service';
+// FDG Workspace
+import { ClientsRepository } from '@gitroom/nestjs-libraries/database/prisma/workspace/clients.repository';
+import { ClientsService } from '@gitroom/nestjs-libraries/database/prisma/workspace/clients.service';
+import { ProjectsRepository } from '@gitroom/nestjs-libraries/database/prisma/workspace/projects.repository';
+import { ProjectsService } from '@gitroom/nestjs-libraries/database/prisma/workspace/projects.service';
+import { TasksRepository } from '@gitroom/nestjs-libraries/database/prisma/workspace/tasks.repository';
+import { TasksService } from '@gitroom/nestjs-libraries/database/prisma/workspace/tasks.service';
 
 @Global()
 @Module({
@@ -103,6 +110,13 @@ import { AdminStatsService } from '@gitroom/nestjs-libraries/database/prisma/adm
     ErrorsService,
     AdminStatsRepository,
     AdminStatsService,
+    // FDG Workspace
+    ClientsRepository,
+    ClientsService,
+    ProjectsRepository,
+    ProjectsService,
+    TasksRepository,
+    TasksService,
   ],
   get exports() {
     return this.providers;
