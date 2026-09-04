@@ -67,6 +67,9 @@ libraries/
 
 ## Getting started
 
+> Already set up and just need to start it? See **[docs/RUNNING.md](docs/RUNNING.md)**
+> for the daily commands and every problem this stack is known to throw.
+
 **Requirements:** Node 22.12.x (the project will not build on 24), pnpm 10.6.1,
 and Docker.
 
